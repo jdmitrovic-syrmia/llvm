@@ -423,6 +423,19 @@ def TuneSiFive7 : SubtargetFeature<"sifive7", "RISCVProcFamily", "SiFive7",
 
 def Proci8500 : SubtargetFeature<"i8500", "RISCVProcFamily", "Others",
                                    "i8500 processor">;
+
+def FeatureCustomCMov : SubtargetFeature<"ccmov", "HasCustomCMov",
+                                          "true", "Using ccmov opcode",
+                                          [Feature64Bit]>;
+
+def HasCustomCMov : Predicate<"Subtarget->hasCustomCMov()">,
+                             AssemblerPredicate<(all_of FeatureCustomCMov),
+                             "'ccmov' instruction">;
+
+def HasStdExtZbtOrCustomCMov : Predicate<"Subtarget->hasStdExtZbt() || Subtarget->hasCustomCMov()">,
+                             AssemblerPredicate<(any_of FeatureStdExtZbt, FeatureCustomCMov),
+                             "'Zbt' (Ternary 'Zb' Instructions) or 'ccmov' instruction">;
+
 //===----------------------------------------------------------------------===//
 // Named operands for CSR instructions.
 //===----------------------------------------------------------------------===//
@@ -531,7 +544,8 @@ def : ProcessorModel<"i8500", i8500Model, [Feature64Bit,
                                            FeatureStdExtD,
                                            FeatureStdExtC,
                                            FeatureStdExtZba,
-                                           FeatureStdExtZbb],
+                                           FeatureStdExtZbb,
+                                           FeatureCustomCMov],
                      [Proci8500]>;
 
 def : ProcessorModel<"i8500NoSched", NoSchedModel, [Feature64Bit,
@@ -541,7 +555,8 @@ def : ProcessorModel<"i8500NoSched", NoSchedModel, [Feature64Bit,
                                            FeatureStdExtD,
                                            FeatureStdExtC,
                                            FeatureStdExtZba,
-                                           FeatureStdExtZbb]>;
+                                           FeatureStdExtZbb,
+                                           FeatureCustomCMov]>;
 
 //===----------------------------------------------------------------------===//
 // Define the RISC-V target.
