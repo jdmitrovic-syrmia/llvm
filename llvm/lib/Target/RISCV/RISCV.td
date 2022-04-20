@@ -436,6 +436,10 @@ def HasStdExtZbtOrCustomCMov : Predicate<"Subtarget->hasStdExtZbt() || Subtarget
                              AssemblerPredicate<(any_of FeatureStdExtZbt, FeatureCustomCMov),
                              "'Zbt' (Ternary 'Zb' Instructions) or 'ccmov' instruction">;
 
+def FeatureLoadStorePairs
+    : SubtargetFeature<"load-store-pairs", "UseLoadStorePairs", "true",
+                       "Optimize for hardware load-store bonding">;
+
 //===----------------------------------------------------------------------===//
 // Named operands for CSR instructions.
 //===----------------------------------------------------------------------===//
@@ -545,7 +549,8 @@ def : ProcessorModel<"i8500", i8500Model, [Feature64Bit,
                                            FeatureStdExtC,
                                            FeatureStdExtZba,
                                            FeatureStdExtZbb,
-                                           FeatureCustomCMov],
+                                           FeatureCustomCMov,
+                                           FeatureLoadStorePairs],
                      [Proci8500]>;
 
 def : ProcessorModel<"i8500NoSched", NoSchedModel, [Feature64Bit,
@@ -556,7 +561,8 @@ def : ProcessorModel<"i8500NoSched", NoSchedModel, [Feature64Bit,
                                            FeatureStdExtC,
                                            FeatureStdExtZba,
                                            FeatureStdExtZbb,
-                                           FeatureCustomCMov]>;
+                                           FeatureCustomCMov,
+                                           FeatureLoadStorePairs]>;
 
 //===----------------------------------------------------------------------===//
 // Define the RISC-V target.
